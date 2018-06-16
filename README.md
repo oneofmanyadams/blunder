@@ -1,2 +1,2 @@
-# blunder
+# blunders
 More detailed errors
