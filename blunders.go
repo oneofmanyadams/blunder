@@ -43,12 +43,12 @@ func (b *Blunders) RegisterCode(code_number int, code_name string) (success bool
 	for existing_code_number, existing_code_name := range b.Codes {
 		if existing_code_number == code_number {
 			success = false
-			b.newSelfBlunder(fmt.Sprintf("Attempted to use existing Code id \"%d\"", code_number))
+			b.newSelfBlunder(fmt.Sprintf("Attempted to use existing Code id \"%d\".", code_number))
 			return
 		}
 		if existing_code_name == code_name {
 			success = false
-			b.newSelfBlunder(fmt.Sprintf("Attempted to use existing Code name \"%s\"", code_name))
+			b.newSelfBlunder(fmt.Sprintf("Attempted to use existing Code name \"%s\".", code_name))
 			return
 		}
 	}
@@ -105,7 +105,7 @@ func (b *Blunders) newBlunderBase(code int, fatal bool, message string) (blunder
 	} else {
 		code_id = 0
 		code_name = b.Codes[0]
-		b.newSelfBlunder(fmt.Sprintf("Attempted to use unregistered Code id \"%d\"", code))
+		b.newSelfBlunder(fmt.Sprintf("Attempted to use unregistered Code id \"%d\".", code))
 	}
 
 	blunder = NewBlunder(code_id, code_name, fatal, message)
@@ -119,4 +119,24 @@ func (b *Blunders) newBlunderBase(code int, fatal bool, message string) (blunder
 // All self-Blunders are considered non-fatal.
 func (b *Blunders) newSelfBlunder(message string) {
 	b.selfBlunders = append(b.selfBlunders, NewBlunder(0, "self_blunder", false, message))
+}
+
+//////////////////////////////////////////////////////////////////
+// Utility Functions
+//////////////////////////////////////////////////////////////////
+func (b *Blunders) DumpToCommandLine() {
+	fmt.Println("")
+	fmt.Println("---------------------")
+	fmt.Println("Reported Blunders:")
+	for _, blunder := range b.Reported {
+		fmt.Println(blunder.Error())
+	}
+	fmt.Println("")
+	fmt.Println("---------------------")
+	fmt.Println("Self Blunders:")
+	for _, self_blunder := range b.selfBlunders {
+		fmt.Println(self_blunder.Error())
+	}
+	fmt.Println("")
+
 }
