@@ -3,7 +3,6 @@ package blunders
 
 import (
 	"fmt"
-	"time"
 )
 
 // Blunders is the main type for the blunders package.
@@ -26,7 +25,7 @@ type Blunders struct {
 func NewBlunders(identifier string) (new_blunders Blunders) {
 	new_blunders.Identifier = identifier
 	new_blunders.Codes = make(map[int]string)
-	new_blunders.RegisterCode(0, "UnregisteredBlunder")
+	new_blunders.RegisterCode(0, "SelfBlunder")
 	return
 }
 
@@ -35,7 +34,7 @@ func NewBlunders(identifier string) (new_blunders Blunders) {
 //////////////////////////////////////////////////////////////////
 
 // RegisterCode creates a new blunder code and it's code name in "Codes".
-// code_number "0" and code_name "UnregisteredBlunder" are reserved for the Blunders package. 
+// code_number "0" and code_name "SelfBlunder" are reserved for the Blunders package. 
 // It automatically checks to make sure the code or code name does not already exist.
 // It will log a Blunder in "selfBlunders" if code_number or code_name already exists in "Codes".
 // Returns true if the Code was created or false if it was not created.
@@ -74,7 +73,7 @@ func (b *Blunders) UnRegisterCode(code_number int) {
 
 // New is the standard function used to record a NON-FATAL blunder.
 // This is designed for recording blunders that won't necissarily cause the program to crash.
-// If a non-existing Code id is used, it will use the UnregisteredBlunder Code/CodeName
+// If a non-existing Code id is used, it will use the SelfBlunder Code/CodeName
 // and record a Blunder in selfBlunders.
 func (b *Blunders) New(code int, message string) (blunder Blunder) {
 	fatal := false
@@ -84,7 +83,7 @@ func (b *Blunders) New(code int, message string) (blunder Blunder) {
 
 // NewFatal is the standard function used to record a FATAL blunder.
 // This is designed for recording blunders that will likely cause the program to crash.
-// If a non-existing Code id is used, it will use the UnregisteredBlunder Code/CodeName
+// If a non-existing Code id is used, it will use the SelfBlunder Code/CodeName
 // and record a Blunder in selfBlunders.
 func (b *Blunders) NewFatal(code int, message string) (blunder Blunder) {
 	fatal := true
@@ -94,7 +93,7 @@ func (b *Blunders) NewFatal(code int, message string) (blunder Blunder) {
 
 // newBlunderBase the core function used to record a blunder.
 // This provides a common base for both "FATAL" and "NON-FATAL" blunders.
-// If a non-existing Code id is used, it will use the UnregisteredBlunder Code/CodeName
+// If a non-existing Code id is used, it will use the SelfBlunder Code/CodeName
 // and record a Blunder in selfBlunders.
 func (b *Blunders) newBlunderBase(code int, fatal bool, message string) (blunder Blunder) {
 	var code_id int
@@ -116,10 +115,10 @@ func (b *Blunders) newBlunderBase(code int, fatal bool, message string) (blunder
 }
 
 // newSelfBlunder is used to record any blunders encountered within a Blunders instance.
-// By default, it uses the blunder Code "0" and the CodeName "self_blunder".
+// By default, it uses the blunder Code "0" and the CodeName "SelfBlunder".
 // All self-Blunders are considered non-fatal.
 func (b *Blunders) newSelfBlunder(message string) {
-	b.selfBlunders = append(b.selfBlunders, NewBlunder(0, "self_blunder", false, message))
+	b.selfBlunders = append(b.selfBlunders, NewBlunder(0, b.Codes[0], false, message))
 }
 
 //////////////////////////////////////////////////////////////////

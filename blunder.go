@@ -18,11 +18,11 @@ type Blunder struct {
 
 // NewBlunder generates a new Blunder type.
 // Essentially mimics errors.New(string)
-func NewBlunder(code int, code_name string, fatal bool, message string) (blunder Blunder) {
-	blunder.code = code
-	blunder.codeName = code_name
-	blunder.fatal = fatal
-	blunder.message = message
+func NewBlunder(code int, code_name string, fatal bool, message string) (b Blunder) {
+	b.code = code
+	b.codeName = code_name
+	b.fatal = fatal
+	b.message = message
 	return
 } 
 
