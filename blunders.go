@@ -124,6 +124,8 @@ func (b *Blunders) newSelfBlunder(message string) {
 //////////////////////////////////////////////////////////////////
 // Utility Functions
 //////////////////////////////////////////////////////////////////
+
+// DumptoCommandLine is a simple function used for quickly displaying all reported blunders.
 func (b *Blunders) DumpToCommandLine() {
 	fmt.Println("")
 	fmt.Println("---------------------")
