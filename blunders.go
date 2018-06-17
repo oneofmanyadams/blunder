@@ -138,7 +138,7 @@ func (b *Blunders) blunderListToLogString(blunders []Blunder) (log_string string
 
 // DumpLogTo writes all blunders to the provided Writer (Stdout, a log file, etc...).
 // Adds selfBlunders to the end of normal Blunders.
-func (b *Blunders) DumpLogTo(writer io.Writer) {
+func (b *Blunders) WriteLogTo(writer io.Writer) {
 	all_blunders := []byte(b.blunderListToLogString(b.Reported)+b.blunderListToLogString(b.selfBlunders))
 	writer.Write(all_blunders)
 }
