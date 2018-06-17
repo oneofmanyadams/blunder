@@ -5,10 +5,10 @@ import (
 )
 
 // Blunder is the expanded version of an error.
-//  - "code" makes it easier to classify blunders.
-//  - "codeName" provides a more human friendly way of looking at a "code".
-//  - "fatal" is used to determine if the blunder should halt the program.
-//  - "message" is the description provided when the specific blunder was reported.
+//  - "Code" makes it easier to classify blunders.
+//  - "CodeName" provides a more human friendly way of looking at a "code".
+//  - "Fatal" is used to determine if the blunder should halt the program.
+//  - "Message" is the description provided when the specific blunder was reported.
 type Blunder struct {
 	Code int
 	CodeName string
