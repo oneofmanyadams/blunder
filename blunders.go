@@ -26,7 +26,7 @@ type Blunders struct {
 func NewBlunders(identifier string) (new_blunders Blunders) {
 	new_blunders.Identifier = identifier
 	new_blunders.Codes = make(map[int]string)
-	new_blunders.RegisterCode(0, "SelfBlunder")
+	new_blunders.AddCode(0, "SelfBlunder")
 	return
 }
 
@@ -34,12 +34,12 @@ func NewBlunders(identifier string) (new_blunders Blunders) {
 // Codes Functions
 //////////////////////////////////////////////////////////////////
 
-// RegisterCode creates a new blunder code and it's code name in "Codes".
+// AddCode creates a new blunder code and it's code name in "Codes".
 // code_number "0" and code_name "SelfBlunder" are reserved for the Blunders package. 
 // It automatically checks to make sure the code or code name does not already exist.
 // It will log a Blunder in "selfBlunders" if code_number or code_name already exists in "Codes".
 // Returns true if the Code was created or false if it was not created.
-func (b *Blunders) RegisterCode(code_number int, code_name string) (success bool) {
+func (b *Blunders) AddCode(code_number int, code_name string) (success bool) {
 	success = true
 	for existing_code_number, existing_code_name := range b.Codes {
 		if existing_code_number == code_number {
@@ -58,13 +58,13 @@ func (b *Blunders) RegisterCode(code_number int, code_name string) (success bool
 	return
 }
 
-// UnRegisterCode does not actually provide any functionality.
+// RemoveCode does not actually provide any functionality.
 // I cannot think of any legitimate reason why one would need to dynamically un register a blunder Code.
 // The only reason would be to create a new Code that uses the same id or name as an already existing Code,
 // and having different Codes with the same id/name defeats the purpose of having ids/names in the first place.
 // This is basically here just to remind me what a dumb idea this would be
 // when I inevitably try to implement this in the future.
-func (b *Blunders) UnRegisterCode(code_number int) {
+func (b *Blunders) RemoveCode(code_number int) {
 
 }
 
