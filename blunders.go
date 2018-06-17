@@ -60,7 +60,7 @@ func (b *Blunders) RegisterCode(code_number int, code_name string) (success bool
 // UnRegisterCode does not actually provide any functionality.
 // I cannot think of any legitimate reason why one would need to dynamically un register a blunder Code.
 // The only reason would be to create a new Code that uses the same id or name as an already existing Code,
-// and having different Codes with the same id/name defeats the purpose of having ids/names int he first place.
+// and having different Codes with the same id/name defeats the purpose of having ids/names in the first place.
 // This is basically here just to remind me what a dumb idea this would be
 // when I inevitably try to implement this in the future.
 func (b *Blunders) UnRegisterCode(code_number int) {
@@ -114,7 +114,7 @@ func (b *Blunders) newBlunderBase(code int, fatal bool, message string) (blunder
 	return
 }
 
-// newSelfBlunder is used to record any blunders encountered with the Blunders package itself.
+// newSelfBlunder is used to record any blunders encountered within a Blunders instance.
 // By default, it uses the blunder Code "0" and the CodeName "self_blunder".
 // All self-Blunders are considered non-fatal.
 func (b *Blunders) newSelfBlunder(message string) {
