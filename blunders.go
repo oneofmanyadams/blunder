@@ -123,6 +123,28 @@ func (b *Blunders) newSelfBlunder(message string) {
 }
 
 //////////////////////////////////////////////////////////////////
+// Information Functions
+//////////////////////////////////////////////////////////////////
+
+// HasFatal is a simple method that will loop through all reported blunders
+// and return true if an blunder has .Fatal set to true.
+func (b *Blunders) HasFatal() (fatal_exists bool) {
+	for _, blndr := range b.Reported {
+		if blndr.Fatal {
+			fatal_exists = true
+		}
+	}
+	return
+}
+
+// NoneFatal just returns the opposite of HasFatal.
+// Mainly just done for syntax sake.
+func (b *Blunders) NoneFatal() (no_fatals bool) {
+	no_fatals = !b.HasFatal()
+	return
+}
+
+//////////////////////////////////////////////////////////////////
 // Utility Functions
 //////////////////////////////////////////////////////////////////
 
