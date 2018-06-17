@@ -78,7 +78,7 @@ func (b *Blunders) RemoveCode(code_number int) {
 // and record a Blunder in selfBlunders.
 func (b *Blunders) New(code int, message string) (blunder Blunder) {
 	fatal := false
-	b.newBlunderBase(code, fatal, message)
+	blunder = b.newBlunderBase(code, fatal, message)
 	return
 }
 
@@ -88,7 +88,7 @@ func (b *Blunders) New(code int, message string) (blunder Blunder) {
 // and record a Blunder in selfBlunders.
 func (b *Blunders) NewFatal(code int, message string) (blunder Blunder) {
 	fatal := true
-	b.newBlunderBase(code, fatal, message)
+	blunder = b.newBlunderBase(code, fatal, message)
 	return
 }
 
