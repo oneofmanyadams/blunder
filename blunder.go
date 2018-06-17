@@ -31,11 +31,11 @@ func NewBlunder(code int, code_name string, fatal bool, message string) (b Blund
 func (b *Blunder) Error() (error_string string) {
 	var fatal_string string
 	if b.fatal {
-		fatal_string = "FATAL ERROR"
+		fatal_string = "FATAL BLUNDER"
 	} else {
-		fatal_string = "NON-FATAL ERROR"
+		fatal_string = "NON-FATAL BLUNDER"
 	}
 
-	error_string = fmt.Sprintf("%s enountered. CODE: %d (%s), \"%s\"", fatal_string, b.code, b.codeName, b.message)
+	error_string = fmt.Sprintf("%s enountered, CODE: %d (%s), \"%s\"", fatal_string, b.code, b.codeName, b.message)
 	return
 }
