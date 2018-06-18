@@ -151,7 +151,7 @@ func (b *Blunders) NoneFatal() (no_fatals bool) {
 // blunderListToLogString takes a list of blunders, converts them to strings,
 // prepends b.Identifier-Blunder to the front of the blunder, and then adds all
 // blunders to a single string (seperated by a \n).
-func (b *Blunders) blunderListToLogString(blunders []Blunder) (log_string string) {
+func (b *Blunders) BlunderListToLogString(blunders []Blunder) (log_string string) {
 	for _, blunder := range blunders {
 		log_string = log_string + b.Identifier +"-Blunder, " + blunder.Error() + "\n"
 	}
@@ -161,6 +161,6 @@ func (b *Blunders) blunderListToLogString(blunders []Blunder) (log_string string
 // DumpLogTo writes all blunders to the provided Writer (Stdout, a log file, etc...).
 // Adds selfBlunders to the end of normal Blunders.
 func (b *Blunders) WriteLogTo(writer io.Writer) {
-	all_blunders := []byte(b.blunderListToLogString(b.Reported)+b.blunderListToLogString(b.selfBlunders))
+	all_blunders := []byte(b.BlunderListToLogString(b.Reported)+b.BlunderListToLogString(b.selfBlunders))
 	writer.Write(all_blunders)
 }
