@@ -64,8 +64,8 @@ func (b *Blunders) AddCode(code_number int, code_name string) (success bool) {
 // and having different Codes with the same id/name defeats the purpose of having ids/names in the first place.
 // This is basically here just to remind me what a dumb idea this would be
 // when I inevitably try to implement this in the future.
-func (b *Blunders) RemoveCode(code_number int) {
-
+func (b *Blunders) RemoveCode(code_number int) (result bool) {
+	return
 }
 
 //////////////////////////////////////////////////////////////////
