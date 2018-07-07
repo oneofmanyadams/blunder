@@ -17,6 +17,7 @@ type Blunders struct {
 	Codes map[int]string
 	Reported []Blunder
 	selfBlunders []Blunder
+	Imports int
 }
 
 // NewBlunders creates a new instance of Blunders.
@@ -40,6 +41,32 @@ func NewBlunders(identifier string) (new_blunders Blunders) {
 // It will log a Blunder in "selfBlunders" if code_number or code_name already exists in "Codes".
 // Returns true if the Code was created or false if it was not created.
 func (b *Blunders) AddCode(code_number int, code_name string) (success bool) {
+	success = true
+
+	if code_number > 99 {
+		success = false
+		b.newSelfBlunder(fmt.Sprintf("Attempted to use Code id greater than 99 (\"%d\").", code_number))
+		return
+	}
+
+	for existing_code_number, existing_code_name := range b.Codes {
+		if existing_code_number == code_number {
+			success = false
+			b.newSelfBlunder(fmt.Sprintf("Attempted to use existing Code id \"%d\".", code_number))
+			return
+		}
+		if existing_code_name == code_name {
+			success = false
+			b.newSelfBlunder(fmt.Sprintf("Attempted to use existing Code name \"%s\".", code_name))
+			return
+		}
+	}
+
+	b.Codes[code_number] = code_name
+	return
+}
+
+func(b *Blunders) AddCodeImport(code_number int, code_name string) (success bool) {
 	success = true
 	for existing_code_number, existing_code_name := range b.Codes {
 		if existing_code_number == code_number {
@@ -163,4 +190,26 @@ func (b *Blunders) BlunderListToLogString(blunders []Blunder) (log_string string
 func (b *Blunders) WriteLogTo(writer io.Writer) {
 	all_blunders := []byte(b.BlunderListToLogString(b.Reported)+b.BlunderListToLogString(b.selfBlunders))
 	writer.Write(all_blunders)
+}
+
+//////////////////////////////////////////////////////////////////
+// Import Functions
+//////////////////////////////////////////////////////////////////
+
+func (b *Blunders) Import(sb Blunders) {
+	b.Imports = b.Imports + 1
+	b.ImportCodes(sb)
+	b.ImportBlunders(sb)
+}
+
+func (b *Blunders) ImportCodes(sb Blunders) {
+	for sb_id, sb_name := range sb.Codes {
+		b.AddCodeImport(sb_id+(b.Imports*100), sb.Identifier+"-"+sb_name)
+	}
+}
+
+func (b *Blunders) ImportBlunders(sb Blunders) {
+	for _, ib := range sb.Reported {
+		b.newBlunderBase(ib.Code+(b.Imports*100), ib.Fatal, ib.Message)
+	}
 }
