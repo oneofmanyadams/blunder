@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 	"io"
+	"os"
 )
 //////////////////////////////////////////////////////////////////
 // Blunder Code
@@ -51,6 +52,7 @@ func (b *Blunder) Error() (error_string string) {
 type BlunderBus struct {
 	Blunders []Blunder
 	HasFatal bool
+	ExitOnFatal bool
 }
 
 func NewBlunderBus() (bb *BlunderBus) {
@@ -64,19 +66,25 @@ func NewBlunderBus() (bb *BlunderBus) {
 // BlunderBus New Blunder Methods
 //////////////////////////////////////////////////////////////////
 
-func (bb *BlunderBus) New(code string, message string) {
-	bb.newBase(code, message, false)
+func (bb *BlunderBus) New(code string, message string) Blunder {
+	return bb.newBase(code, message, false)
 }
 
-func (bb *BlunderBus) NewFatal(code string, message string) {
-	bb.newBase(code, message, true)
+func (bb *BlunderBus) NewFatal(code string, message string) Blunder {
+	return bb.newBase(code, message, true)
 }
 
-func (bb *BlunderBus) newBase(code string, message string, fatal bool) {
-	bb.Blunders = append(bb.Blunders, NewBlunder(code, message, fatal, time.Now()))
+func (bb *BlunderBus) newBase(code string, message string, fatal bool) (new_blunder Blunder) {
+	new_blunder = NewBlunder(code, message, fatal, time.Now())
+	bb.Blunders = append(bb.Blunders, new_blunder)
 	if fatal {
 		bb.HasFatal = true
 	}
+	if bb.HasFatal && bb.ExitOnFatal {
+		bb.LogTo(os.Stderr)
+		os.Exit(1)
+	}
+	return
 }
 
 //////////////////////////////////////////////////////////////////
@@ -132,7 +140,7 @@ func (bb BlunderBus) MappedByCode() (blunder_groups map[string][]Blunder) {
 // BlunderBus Utility Methods
 //////////////////////////////////////////////////////////////////
 
-func BlunderSliceAsString(blunder_slice []Blunder) (blunder_string string) {
+func (bb BlunderBus) BlunderSliceAsString(blunder_slice []Blunder) (blunder_string string) {
 	for _, blndr := range blunder_slice {
 		blunder_string = blunder_string + blndr.Error() + "\n"
 	}
@@ -140,6 +148,6 @@ func BlunderSliceAsString(blunder_slice []Blunder) (blunder_string string) {
 }
 
 func (bb BlunderBus) LogTo(writer io.Writer) {
-	all_blunders := []byte(BlunderSliceAsString(bb.Blunders))
+	all_blunders := []byte(bb.BlunderSliceAsString(bb.Blunders))
 	writer.Write(all_blunders)
 }
