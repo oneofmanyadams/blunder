@@ -36,6 +36,6 @@ func (b *Blunder) Error() (error_string string) {
 	} else {
 		fatal_string = "NON-FATAL"
 	}
-	error_string = fmt.Sprintf("%s, %s, \"%s\", %s", fatal_string, b.Code, b.Message, b.Time.Format("2006-01-02 15:04:05"))
+	error_string = fmt.Sprintf("%s,%s,\"%s\",%s", fatal_string, b.Code, b.Message, b.Time.Format("2006-01-02 15:04:05"))
 	return
 }
