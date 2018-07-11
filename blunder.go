@@ -32,10 +32,10 @@ func NewBlunder(code string, message string, fatal bool, b_time time.Time) (blun
 func (b *Blunder) Error() (error_string string) {
 	var fatal_string string
 	if b.Fatal {
-		fatal_string = "FATAL BLUNDER"
+		fatal_string = "FATAL"
 	} else {
-		fatal_string = "NON-FATAL BLUNDER"
+		fatal_string = "NON-FATAL"
 	}
-	error_string = fmt.Sprintf("%s, %s enountered, %s, \"%s\"", b.Time.String(), fatal_string, b.Code, b.Message)
+	error_string = fmt.Sprintf("%s, %s, \"%s\", %s", fatal_string, b.Code, b.Message, b.Time.Format("2006-01-02 15:04:05"))
 	return
 }
