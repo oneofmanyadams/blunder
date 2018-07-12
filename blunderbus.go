@@ -4,6 +4,8 @@ import (
 	"time"
 	"io"
 	"os"
+	"strconv"
+	"fmt"
 )
 
 
@@ -29,21 +31,24 @@ func NewBlunderBus() (bb *BlunderBus) {
 //////////////////////////////////////////////////////////////////
 
 func (bb *BlunderBus) New(code string, message string) Blunder {
-	return bb.newBase(code, message, false)
+	return bb.newBase(code, message, false, time.Now())
 }
 
 func (bb *BlunderBus) NewFatal(code string, message string) Blunder {
-	return bb.newBase(code, message, true)
+	return bb.newBase(code, message, true, time.Now())
 }
 
-func (bb *BlunderBus) newBase(code string, message string, fatal bool) (new_blunder Blunder) {
-	new_blunder = NewBlunder(code, message, fatal, time.Now())
+func (bb *BlunderBus) newBase(code string, message string, fatal bool, b_time time.Time) (new_blunder Blunder) {
+	new_blunder = NewBlunder(code, message, fatal, b_time)
 	bb.Blunders = append(bb.Blunders, new_blunder)
 	if fatal {
 		bb.HasFatal = true
 	}
 	if bb.HasFatal && bb.ExitOnFatal {
-		bb.LogTo(os.Stderr)
+		fmt.Println("")
+		fmt.Println("Fatal blunder encountered.")
+		bb.LogDump()
+		fmt.Println("")
 		os.Exit(1)
 	}
 	return
@@ -99,6 +104,15 @@ func (bb BlunderBus) MappedByCode() (blunder_groups map[string][]Blunder) {
 }
 
 //////////////////////////////////////////////////////////////////
+// BlunderBus Consolidation Methods
+//////////////////////////////////////////////////////////////////
+func (bb *BlunderBus) IncludeBlundersFrom(imported_bb *BlunderBus) {
+	for _, imported_blunder := range imported_bb.Blunders {
+		bb.newBase(imported_blunder.Code, imported_blunder.Message, imported_blunder.Fatal, imported_blunder.Time)
+	}
+}
+
+//////////////////////////////////////////////////////////////////
 // BlunderBus Utility Methods
 //////////////////////////////////////////////////////////////////
 
@@ -112,4 +126,22 @@ func (bb BlunderBus) BlunderSliceAsString(blunder_slice []Blunder) (blunder_stri
 func (bb BlunderBus) LogTo(writer io.Writer) {
 	all_blunders := []byte(bb.BlunderSliceAsString(bb.Blunders))
 	writer.Write(all_blunders)
+}
+
+func (bb BlunderBus) LogDump() {
+	log_file, log_file_error := os.Create("blunder_log_"+strconv.Itoa(int(time.Now().Unix()))+".log")
+	if log_file_error != nil {
+		bb.New("FILECREATE", log_file_error.Error())
+		fmt.Println("Wow, you really screwed up. I can't even create the blunder log.")
+		fmt.Println("Dumping blunders to Stdout in 5 seconds...")
+		fmt.Println("")
+		time.Sleep(5 * time.Second)
+		bb.LogTo(os.Stdout)
+	} else {
+		fmt.Println("Dumping blunders to log in 3 seconds...")
+		fmt.Println("")
+		time.Sleep(3 * time.Second)
+		bb.LogTo(log_file)
+		log_file.Close()
+	}
 }
