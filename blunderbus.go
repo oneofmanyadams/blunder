@@ -138,9 +138,7 @@ func (bb BlunderBus) LogDump() {
 		time.Sleep(5 * time.Second)
 		bb.LogTo(os.Stdout)
 	} else {
-		fmt.Println("Dumping blunders to log in 3 seconds...")
-		fmt.Println("")
-		time.Sleep(3 * time.Second)
+		fmt.Println("Dumping blunders to log...")
 		bb.LogTo(log_file)
 		log_file.Close()
 	}
