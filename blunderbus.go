@@ -129,7 +129,7 @@ func (bb BlunderBus) LogTo(writer io.Writer) {
 }
 
 func (bb BlunderBus) LogDump() {
-	log_file, log_file_error := os.Create("blunder_log_"+strconv.Itoa(int(time.Now().Unix()))+".log")
+	log_file, log_file_error := os.Create("error_log_"+strconv.Itoa(int(time.Now().Unix()))+".log")
 	if log_file_error != nil {
 		bb.New("FILECREATE", log_file_error.Error())
 		fmt.Println("Wow, you really screwed up. I can't even create the blunder log.")
@@ -138,7 +138,7 @@ func (bb BlunderBus) LogDump() {
 		time.Sleep(5 * time.Second)
 		bb.LogTo(os.Stdout)
 	} else {
-		fmt.Println("Dumping blunders to log...")
+		fmt.Println("Dumping errors to log...")
 		bb.LogTo(log_file)
 		log_file.Close()
 	}
