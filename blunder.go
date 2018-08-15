@@ -17,6 +17,7 @@ type Blunder struct {
 	Time time.Time
 }
 
+
 // NewBlunder generates a new Blunder type.
 // Essentially mimics errors.New(string)
 func NewBlunder(code string, message string, fatal bool, b_time time.Time) (blunder Blunder) {
@@ -24,6 +25,16 @@ func NewBlunder(code string, message string, fatal bool, b_time time.Time) (blun
 	blunder.Message = message
 	blunder.Fatal = fatal
 	blunder.Time = b_time
+	return
+}
+
+func New(code string, message string) (blunder Blunder) {
+	blunder = NewBlunder(code, message, false, time.Now())
+	return
+}
+
+func NewFatal(code string, message string) (blunder Blunder) {
+	blunder = NewBlunder(code, message, true, time.Now())
 	return
 }
 
